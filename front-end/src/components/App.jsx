@@ -66,9 +66,11 @@ class App extends Component {
           </div>
         )}/>
 
-        <Route path='/:category' render={({history}) => (
-          <ListPosts posts={this.state.posts}></ListPosts>
-        )}/>
+        <Route path='/:category' render={
+          (props) => (
+            <ListPosts posts={this.state.posts} {...props}></ListPosts>
+          )
+        }/>
       </div>
     )
   }
