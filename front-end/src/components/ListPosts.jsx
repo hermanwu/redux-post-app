@@ -1,3 +1,4 @@
+import * as ReableAPI from '../utils/api.jsx';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,8 +7,14 @@ class ListPosts extends Component {
     posts: PropTypes.array.isRequired,
   }
 
-  render() {
-    let {posts} = this.props;
+  update = (item) => {
+    ReableAPI.upvote(item);
+  }
+
+
+render() {
+    let posts = this.props.posts;
+
 
     if (this.props.match) {
       posts = posts.filter(post => post.category === this.props.match.params.category);
@@ -17,14 +24,16 @@ class ListPosts extends Component {
       <ul className='food-list'>
         {
           posts.map((item) => (
-              <li key={item.id}>
-                <div>{item.title}</div>
-                <div>{item.author}</div>
-                <div>{item.body}</div>
-                <div>{item.category}</div>
-                <div>{item.voteScore}</div>
-              </li>
-            ))
+            <li key={item.id}>
+              <button onClick={() => this.update(item)}>up</button>
+              <span>{item.voteScore}</span>
+
+              <div>{item.title}</div>
+              <div>{item.author}</div>
+              <div>{item.body}</div>
+              <div>{item.category}</div>
+            </li>
+          ))
         }
       </ul>
     )
