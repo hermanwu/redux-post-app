@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import * as ReableAPI from '../utils/api.jsx';
-import { addPost } from '../actions';
-import { loadPosts } from '../actions';
+import { addPost, loadPosts, upvotePost } from '../actions';
+import { loadCategories } from '../actions';
 import ListPosts from './ListPosts';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router'
 
 
 import { Link, Route } from 'react-router-dom';
@@ -18,7 +19,7 @@ class App extends Component {
     })
 
     ReableAPI.getCategories().then((categories) => {
-      this.setState({categories})
+      this.props.loadCategories(categories);
     })
 
     //console.log(store.getState());
@@ -42,24 +43,22 @@ class App extends Component {
    */
 
   render() {
-
-    let posts = this.props.posts;
-    let categories = this.props.categories;
+    const { posts, categories, upvotePost } = this.props;
 
     return (
       <div>
-        <Route exact path='/' render={() => (
-          <div>
 
-            {/*
+        <Route exact path='/' render={() => (
+
+          <div>
             <ul className='categeries-list'>
-              {this.state.categories.map((item) => (
+              {categories.map((item) => (
                 <li key={item.path}>
                   <Link to={`/${item.name}`}>{item.name}</Link>
                 </li>
               ))}
             </ul>
-            */}
+
 
             <input
               type='text'
@@ -68,26 +67,40 @@ class App extends Component {
             />
             <button onClick={this.submitPost}>Submit</button>
 
-            <ListPosts posts={posts}></ListPosts>
+            <ul className='food-list'>
+              {
+                posts.map((item) => (
+                  <li key={item.id}>
+                    <button onClick={() => upvotePost(item)}>up</button>
+                    <span>{item.voteScore}</span>
+
+                    <div>{item.title}</div>
+                    <div>{item.author}</div>
+                    <div>{item.body}</div>
+                    <div>{item.category}</div>
+                  </li>
+                ))
+              }
+            </ul>
           </div>
         )}/>
 
-
-/*
         <Route path='/:category' render={
           (props) => (
-            <ListPosts posts={this.posts} {...props}></ListPosts>
+            <ListPosts posts={posts} {...props}></ListPosts>
           )
         }/>
-*/
+
+        <Route path='/posts/1' render={
+          () => (<div>test</div>)
+        }/>
+
       </div>
     )
   }
 };
 
 const mapStateToProps = (state, ownProps) => {
-
-  console.log(state);
   return {
     posts: state.posts,
     categories: state.categories,
@@ -96,11 +109,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    loadCategories: (categories) => dispatch(loadCategories(categories)),
     loadPosts: (posts) => dispatch(loadPosts(posts)),
+    upvotePost: (post) => dispatch(upvotePost(post.id)),
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(App));

@@ -8,17 +8,16 @@ import {
 } from '../actions'
 
 const categories = (categoriesState = [], action) => {
+  const {categories} = action;
+
+
   switch (action.type) {
     case LOAD_CATEGORIES:
-      return categoriesState
+      return categories
 
     default:
       return categoriesState
   }
-};
-
-const initialPostsState = {
-  posts: []
 };
 
 const posts = (postsState = [], action) => {
@@ -32,21 +31,20 @@ const posts = (postsState = [], action) => {
         name: name
       });
       return state
-
+    */
     case UPVOTE_POST:
-      const index = state.posts.find(p => p.id === id),
-            newScore = state.posts[index].voteScore;
+      const index = postsState.findIndex(p => p.id === id);
+      const newScore = postsState[index].voteScore + 1;
 
       return [
-        ...state.slice(0, index), // everything before current post
+        ...postsState.slice(0, index), // everything before current post
         {
-          ...state[index],
+          ...postsState[index],
           voteScore: newScore,
         },
-        ...state.slice(index + 1), // everything after current post
+        ...postsState.slice(index + 1), // everything after current post
       ]
 
-    */
     case LOAD_POSTS:
       return posts
 

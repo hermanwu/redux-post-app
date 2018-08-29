@@ -12,7 +12,7 @@ export function addPost({id, name}) {
   }
 }
 
-export function upvotePost({id}) {
+export function upvotePost(id) {
   return {
     type: UPVOTE_POST,
     id,

@@ -13,6 +13,7 @@ class ListPosts extends Component {
 
 
 render() {
+    debugger;
     let posts = this.props.posts;
 
 
