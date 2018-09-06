@@ -12,9 +12,8 @@ class ListPosts extends Component {
   }
 
 
-render() {
-    debugger;
-    let posts = this.props.posts;
+  render() {
+      let posts = this.props.posts;
 
 
     if (this.props.match) {

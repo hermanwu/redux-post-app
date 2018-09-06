@@ -5,6 +5,7 @@ import { loadCategories } from '../actions';
 import ListPosts from './ListPosts';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router'
+import DetailedView from './DetailedView';
 
 
 import { Link, Route } from 'react-router-dom';
@@ -14,6 +15,7 @@ class App extends Component {
 
 
   componentDidMount() {
+    debugger;
     ReableAPI.getAllPosts().then((posts) => {
       this.props.loadPosts(posts);
     })
@@ -71,6 +73,7 @@ class App extends Component {
               {
                 posts.map((item) => (
                   <li key={item.id}>
+                      <Link to={`/posts/${item.id}`}>{item.id}</Link>
                     <button onClick={() => upvotePost(item)}>up</button>
                     <span>{item.voteScore}</span>
 
@@ -91,14 +94,34 @@ class App extends Component {
           )
         }/>
 
-        <Route path='/posts/1' render={
-          () => (<div>test</div>)
+        <Route path="/posts/:id" render={
+          (props) => (
+            <DetailedView {...props}></DetailedView>
+          )
         }/>
+
 
       </div>
     )
   }
 };
+
+function upvotePostApiCall(post) {
+  debugger;
+
+  // Invert control!
+  // Return a function that accepts `dispatch` so we can dispatch later.
+  // Thunk middleware knows how to turn thunk async actions into actions.
+
+  return (dispatch) => {
+    ReableAPI.upvote(post)
+      .then(() => {
+        console.log('lallaa');
+        dispatch(upvotePost(post.id))
+      });
+  };
+}
+
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -111,7 +134,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loadCategories: (categories) => dispatch(loadCategories(categories)),
     loadPosts: (posts) => dispatch(loadPosts(posts)),
-    upvotePost: (post) => dispatch(upvotePost(post.id)),
+    upvotePost: (post) => dispatch(upvotePostApiCall(post)),
   }
 }
 
