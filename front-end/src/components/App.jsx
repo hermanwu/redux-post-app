@@ -15,7 +15,6 @@ class App extends Component {
 
 
   componentDidMount() {
-    debugger;
     ReableAPI.getAllPosts().then((posts) => {
       this.props.loadPosts(posts);
     })
@@ -73,8 +72,10 @@ class App extends Component {
               {
                 posts.map((item) => (
                   <li key={item.id}>
-                      <Link to={`/posts/${item.id}`}>{item.id}</Link>
+                    <Link to={`/posts/${item.id}`}>{item.id}</Link>
+
                     <button onClick={() => upvotePost(item)}>up</button>
+
                     <span>{item.voteScore}</span>
 
                     <div>{item.title}</div>

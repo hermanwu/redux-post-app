@@ -55,3 +55,13 @@ export const search = (query) =>
     body: JSON.stringify({query})
   }).then(res => res.json())
     .then(data => data.books)
+
+
+export const getPost = (id) =>
+  fetch(`${api}/posts/${id}`, {
+    method: 'GET',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
